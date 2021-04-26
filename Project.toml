@@ -1,7 +1,7 @@
 name = "ReliabilityDiagrams"
 uuid = "e5f51471-6270-49e4-a15a-f1cfbff4f856"
 authors = ["David Widmann"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 AbstractPlotting = "537997a7-5e4e-5d89-9595-2241ea00577e"
