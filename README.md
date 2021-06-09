@@ -17,6 +17,8 @@
 
 ## References
 
+Bröcker, J., & Smith, L. A. (2007). [Increasing the reliability of reliability diagrams](https://doi.org/10.1175/WAF993.1). Weather and forecasting, 22(3), 651-661.
+
 Murphy, A., & Winkler, R. (1977). [Reliability of Subjective Probability Forecasts of Precipitation and Temperature](https://doi.org/10.2307/2346866). Journal of the Royal Statistical Society. Series C (Applied Statistics), 26(1), 41-47.
 
 Vaicenavicius, J., Widmann, D., Andersson, C., Lindsten, F., Roll, J. & Schön, T. B. (2019). [Evaluating model calibration in classification](http://proceedings.mlr.press/v89/vaicenavicius19a.html). Proceedings of Machine Learning Research, in Proceedings of Machine Learning Research 89:3459-3467 (AISTATS 2019).
