@@ -52,8 +52,8 @@
                 @test points[1] isa Vector{Point4f0}
                 @test length(points[1]) == binning.n
 
-                meanprobs, meanfreqs, _ = ReliabilityDiagrams.means_bins(
-                    probabilities, outcomes; binning=binning
+                meanprobs, meanfreqs, _ = ReliabilityDiagrams.means_and_bars(
+                    probabilities, outcomes; binning=binning, consistencybars=nothing
                 )
                 @test map(first, points[1]) ≈ meanprobs
                 @test map(x -> x[2], points[1]) ≈ meanfreqs

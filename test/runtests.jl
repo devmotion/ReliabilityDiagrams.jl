@@ -7,7 +7,7 @@ using Random
 using Statistics
 using Test
 
-using ReliabilityDiagrams: ReliabilityPlot, bincounts, binindex, bins, numbins
+using ReliabilityDiagrams: ReliabilityPlot
 using StatsBase: Histogram, quantile
 
 Random.seed!(1234)

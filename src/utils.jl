@@ -1,34 +1,3 @@
-# compute mean probabilities and frequencies for a specific binning algorithm
-# and return mean probabilities, frequencies, and bins
-function means_bins(
-    probabilities::AbstractVector{<:Real}, outcomes::AbstractVector{Bool}; binning
-)
-    # obtain bins
-    bins = ReliabilityDiagrams.bins(probabilities, outcomes, binning)
-
-    # initialize arrays for mean probabilities and frequencies
-    counts = bincounts(bins)
-    n = numbins(bins)
-    meanprobabilities = zeros(n)
-    meanfrequencies = zeros(n)
-
-    # compute mean probabilities and frequencies in each bin
-    for (p, o) in zip(probabilities, outcomes)
-        index = binindex(bins, p)
-        if 1 <= index <= n
-            @inbounds begin
-                c = (counts[index] += 1)
-                meanprobabilities[index] += (p - meanprobabilities[index]) / c
-                meanfrequencies[index] += (o - meanfrequencies[index]) / c
-            end
-        end
-    end
-
-    # return mean probabilities and frequencies in non-empty bins
-    nonzero = findall(!iszero, counts)
-    return meanprobabilities[nonzero], meanfrequencies[nonzero], bins
-end
-
 # compute ranges of consistency bars
 # multiple bins
 function consistency_ranges(
@@ -68,18 +37,47 @@ function means_and_bars(
     binning,
     consistencybars,
 )
-    # bin the probabilities and compute average probabilities and frequencies
-    meanprobabilities, meanfrequencies, bins = means_bins(
-        probabilities, outcomes; binning=binning
-    )
+    length(probabilities) == length(outcomes) ||
+        error("number of probabilities and outcomes must be equal")
 
-    # estimate consistency ranges
+    # obtain bins
+    bins = ReliabilityDiagrams.bins(probabilities, outcomes, binning)
+    maxbins = max_nonempty_bins(bins, length(probabilities))
+
+    # compute dictionaries of binned probabilities and mean frequencies of outcomes
     T = eltype(probabilities)
-    binned_probabilities = DataStructures.OrderedDict{Int,Vector{T}}()
-    for p in probabilities
-        push!(get!(binned_probabilities, binindex(bins, p), Vector{T}(undef, 0)), p)
-    end
-    low_high = consistency_ranges(binned_probabilities, consistencybars)
+    dict_probabilities = DataStructures.OrderedDict{Int,Vector{T}}()
+    dict_meanfrequencies = DataStructures.OrderedDict{Int,Float64}()
+    sizehint!(dict_probabilities, maxbins)
+    sizehint!(dict_meanfrequencies, maxbins)
+    for (probability, outcome) in zip(probabilities, outcomes)
+        # compute index of bin
+        index = binindex(bins, probability)
 
-    return meanprobabilities, meanfrequencies, low_high
+        # append to the array of probabilities in the current bin
+        bin = get!(dict_probabilities, index, Vector{T}(undef, 0))
+        push!(bin, probability)
+
+        # update mean frequency for the current bin
+        n = length(bin)
+        meanfrequency = get(dict_meanfrequencies, index, 0.0)
+        dict_meanfrequencies[index] = meanfrequency + (outcome - meanfrequency) / n
+    end
+
+    # compute mean probabilities
+    meanprobabilities = map(Statistics.mean, values(dict_probabilities))
+
+    # extract mean frequencies (has the same order!)
+    meanfrequencies = collect(values(dict_meanfrequencies))
+
+    # compute consistency ranges (in the same order)
+    low_high = consistency_ranges(dict_probabilities, consistencybars)
+
+    # sort results according to mean probabilities
+    perm = sortperm(meanprobabilities)
+    sorted_meanprobabilities = meanprobabilities[perm]
+    sorted_meanfrequencies = meanfrequencies[perm]
+    sorted_low_high = low_high[perm]
+
+    return sorted_meanprobabilities, sorted_meanfrequencies, sorted_low_high
 end

@@ -8,22 +8,24 @@
         @test_throws ErrorException EqualSize(; n=-1)
 
         # binning
-        b = bins(rand(100), rand(100), EqualSize())
+        nbins = 11
+        b = ReliabilityDiagrams.bins(rand(100), rand(100), EqualSize(; n=nbins))
         @test b isa Histogram{Int}
-
-        @test numbins(b) == 10
+        @test length(b.weights) == nbins
         @test length(b.edges) == 1
-        @test first(b.edges) == 0:0.1:1
+        @test first(b.edges) == range(0; stop=1, length=nbins + 1)
 
-        @test bincounts(b) isa AbstractVector{Int}
-        @test all(iszero, bincounts(b))
+        @test ReliabilityDiagrams.binindex(b, prevfloat(0.0)) == 0
+        @test ReliabilityDiagrams.binindex(b, 0) == 1
+        @test ReliabilityDiagrams.binindex(b, 0.05) == 1
+        @test ReliabilityDiagrams.binindex(b, 0.1) == 2
+        @test ReliabilityDiagrams.binindex(b, 1) == nbins
+        @test ReliabilityDiagrams.binindex(b, nextfloat(1.0)) == nbins + 1
 
-        @test binindex(b, prevfloat(0.0)) == 0
-        @test binindex(b, 0) == 1
-        @test binindex(b, 0.05) == 1
-        @test binindex(b, 0.1) == 2
-        @test binindex(b, 1) == 10
-        @test binindex(b, nextfloat(1.0)) == 11
+        @test ReliabilityDiagrams.max_nonempty_bins(b, 1) == 1
+        @test ReliabilityDiagrams.max_nonempty_bins(b, nbins - 1) == nbins - 1
+        @test ReliabilityDiagrams.max_nonempty_bins(b, nbins) == nbins
+        @test ReliabilityDiagrams.max_nonempty_bins(b, nbins + 1) == nbins
     end
 
     @testset "EqualMass" begin
@@ -36,21 +38,23 @@
 
         # binning
         x = rand(100)
-        b = bins(x, rand(100), EqualMass())
+        nbins = 17
+        b = ReliabilityDiagrams.bins(x, rand(100), EqualMass(; n=nbins))
         @test b isa Histogram{Int}
-
-        @test numbins(b) == 10
+        @test length(b.weights) == nbins
         @test length(b.edges) == 1
-        @test first(b.edges) ≈ quantile(x, 0:0.1:1)
+        @test first(b.edges) ≈ quantile(x, range(0; stop=1, length=nbins + 1))
 
-        @test bincounts(b) isa AbstractVector{Int}
-        @test all(iszero, bincounts(b))
+        @test ReliabilityDiagrams.binindex(b, prevfloat(minimum(x))) == 0
+        @test ReliabilityDiagrams.binindex(b, minimum(x)) == 1
+        @test ReliabilityDiagrams.binindex(b, quantile(x, 0.05)) == 1
+        @test ReliabilityDiagrams.binindex(b, quantile(x, 0.1)) == 2
+        @test ReliabilityDiagrams.binindex(b, maximum(x)) == nbins
+        @test ReliabilityDiagrams.binindex(b, nextfloat(maximum(x))) == nbins + 1
 
-        @test binindex(b, prevfloat(minimum(x))) == 0
-        @test binindex(b, minimum(x)) == 1
-        @test binindex(b, quantile(x, 0.05)) == 1
-        @test binindex(b, quantile(x, 0.1)) == 2
-        @test binindex(b, maximum(x)) == 10
-        @test binindex(b, nextfloat(maximum(x))) == 11
+        @test ReliabilityDiagrams.max_nonempty_bins(b, 1) == 1
+        @test ReliabilityDiagrams.max_nonempty_bins(b, nbins - 1) == nbins - 1
+        @test ReliabilityDiagrams.max_nonempty_bins(b, nbins) == nbins
+        @test ReliabilityDiagrams.max_nonempty_bins(b, nbins + 1) == nbins
     end
 end

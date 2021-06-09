@@ -1,33 +1,4 @@
 @testset "utils.jl" begin
-    @testset "means_bins" begin
-        x = rand(100)
-        y = rand(Bool, 100)
-
-        for alg in (EqualSize(), EqualMass())
-            meanx, meany, b = ReliabilityDiagrams.means_bins(x, y; binning=alg)
-            @test meanx isa Vector{Float64}
-            @test meany isa Vector{Float64}
-            @test b isa Histogram{Int}
-
-            @test 1 ≤ length(meanx) ≤ 10
-            @test length(meany) == length(meanx)
-            @test numbins(b) == 10
-
-            @test sum(bincounts(b)) == 100
-
-            idxs = [binindex(b, xi) for xi in x]
-            for i in 1:10
-                idxs_i = findall(==(i), idxs)
-                @test length(idxs_i) == bincounts(b)[i]
-
-                iszero(length(idxs_i)) && continue
-
-                @test meanx[i] ≈ mean(x[idxs_i])
-                @test meany[i] ≈ mean(y[idxs_i])
-            end
-        end
-    end
-
     @testset "consistency_ranges" begin
         # consistency bars
         # single prediction
@@ -70,18 +41,59 @@
         probabilities = rand(100)
         outcomes = rand(Bool, 100)
 
-        for alg in (EqualSize(), EqualMass())
-            mean_predictions, mean_frequencies, ranges = ReliabilityDiagrams.means_and_bars(
-                probabilities, outcomes; binning=alg, consistencybars=nothing
+        for binning in (EqualSize(; n=13), EqualMass(; n=17)),
+            consistencybars in (ConsistencyBars(), nothing)
+            # compute mean probabilities, frequencies, and consistency ranges
+            meanprobabilities, meanfrequencies, ranges = ReliabilityDiagrams.means_and_bars(
+                probabilities, outcomes; binning=binning, consistencybars=consistencybars
             )
-            @test length(mean_predictions) == alg.n
-            @test length(mean_frequencies) == alg.n
-            @test length(ranges) == alg.n
 
-            @test (mean_predictions, mean_frequencies) ==
-                  ReliabilityDiagrams.means_bins(probabilities, outcomes; binning=alg)[1:2]
-            @test ranges isa Vector{Tuple{Float64,Float64}}
-            @test all(isnan(x[1]) && isnan(x[2]) for x in ranges)
+            # check that length of arrays is consistent
+            @test 1 ≤ length(meanprobabilities) ≤ binning.n
+            @test length(meanfrequencies) == length(meanfrequencies)
+            @test length(ranges) == length(meanfrequencies)
+
+            # ensure that probabilities are sorted
+            @test issorted(meanprobabilities)
+
+            # check that length of arrays is correct
+            bins = ReliabilityDiagrams.bins(probabilities, outcomes, binning)
+            binindices = [ReliabilityDiagrams.binindex(bins, p) for p in probabilities]
+            indices = unique(binindices)
+            @test length(meanprobabilities) == length(indices)
+
+            # check that values of mean probabilities and frequencies are correct
+            indices_of_means = [
+                ReliabilityDiagrams.binindex(bins, x) for x in meanprobabilities
+            ]
+            @test sort(indices) == sort(indices_of_means)
+            for (j, index) in enumerate(indices_of_means)
+                meanprobs = mean(
+                    p for (p, b) in zip(probabilities, binindices) if b == index
+                )
+                meanfreqs = mean(o for (o, b) in zip(outcomes, binindices) if b == index)
+                @test meanprobs ≈ meanprobabilities[j]
+                @test meanfreqs ≈ meanfrequencies[j]
+            end
+
+            # rough test of consistency ranges
+            if consistencybars === nothing
+                @test all(isnan(x[1]) && isnan(x[2]) for x in ranges)
+            else
+                @test all(x[1] ≤ y ≤ x[2] for (x, y) in zip(ranges, meanprobabilities))
+            end
+        end
+
+        # exception
+        for binning in (EqualSize(; n=12), EqualMass(; n=8)),
+            consistencybars in (ConsistencyBars(), nothing)
+
+            @test_throws ErrorException ReliabilityDiagrams.means_and_bars(
+                rand(100), rand(Bool, 99); binning=binning, consistencybars=consistencybars
+            )
+            @test_throws ErrorException ReliabilityDiagrams.means_and_bars(
+                rand(100), rand(Bool, 101); binning=binning, consistencybars=consistencybars
+            )
         end
     end
 end
