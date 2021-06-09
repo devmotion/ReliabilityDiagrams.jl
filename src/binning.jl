@@ -37,10 +37,6 @@ function bins(probabilities, ::Any, algorithm::EqualMass)
     return StatsBase.Histogram(StatsBase.nquantile(probabilities, algorithm.n))
 end
 
-bincounts(bins::StatsBase.Histogram{<:Real,1}) = vec(bins.weights)
-
-numbins(bins::StatsBase.Histogram{<:Real,1}) = length(bins.weights)
-
 function binindex(bins::StatsBase.Histogram{<:Real,1}, x::Real)
     index = StatsBase.binindex(bins, x)
     nbins = length(bins.weights)
@@ -52,4 +48,8 @@ function binindex(bins::StatsBase.Histogram{<:Real,1}, x::Real)
     else
         index
     end
+end
+
+function max_nonempty_bins(bins::StatsBase.Histogram{<:Real,1}, n::Int)
+    return min(length(bins.weights), n)
 end
