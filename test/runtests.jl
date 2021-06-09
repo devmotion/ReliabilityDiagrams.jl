@@ -1,16 +1,21 @@
 using ReliabilityDiagrams
-using AbstractPlotting
+
+using DataStructures
+using Makie
+
 using Random
 using Statistics
-using StatsBase: Histogram, quantile
 using Test
 
-using ReliabilityDiagrams:
-    ReliabilityPlot, bincounts, binindex, bins, numbins, reliability_summary
+using ReliabilityDiagrams: ReliabilityPlot, bincounts, binindex, bins, numbins
+using StatsBase: Histogram, quantile
 
 Random.seed!(1234)
 
 @testset "ReliabilityDiagrams.jl" begin
     include("binning.jl")
+    include("consistency_bars.jl")
+    include("utils.jl")
+
     include("conversions.jl")
 end

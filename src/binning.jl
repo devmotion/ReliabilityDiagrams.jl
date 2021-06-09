@@ -1,52 +1,33 @@
-function reliability_summary(
-    probabilities::AbstractVector{<:Real}, outcomes::AbstractVector{Bool}, algorithm
-)
-    # obtain bins
-    bins = ReliabilityDiagrams.bins(probabilities, outcomes, algorithm)
-
-    # initialize arrays for mean probabilities and frequencies
-    counts = bincounts(bins)
-    n = numbins(bins)
-    meanprobabilities = zeros(n)
-    meanfrequencies = zeros(n)
-
-    # compute mean probabilities and frequencies in each bin
-    for (p, o) in zip(probabilities, outcomes)
-        index = binindex(bins, p)
-        if 1 <= index <= n
-            @inbounds begin
-                c = (counts[index] += 1)
-                meanprobabilities[index] += (p - meanprobabilities[index]) / c
-                meanfrequencies[index] += (o - meanfrequencies[index]) / c
-            end
-        end
-    end
-
-    # return mean probabilities and frequencies in non-empty bins
-    nonzero = findall(!iszero, counts)
-    return meanprobabilities[nonzero], meanfrequencies[nonzero], bins
-end
-
 ## binning algorithms
 
-"""
-    EqualSize(n::Int)
-
-Create binning algorithm of the probability simplex with `n` bins of the same size.
-"""
 struct EqualSize
     "Number of bins."
     n::Int
+
+    @doc """
+        EqualSize(; n::Int=10)
+
+    Create binning algorithm with `n` bins of the same size.
+    """
+    function EqualSize(; n::Int=10)
+        n > 0 || error("number of bins must be positive")
+        return new(n)
+    end
 end
 
-"""
-    EqualMass(n::Int)
-
-Create binning algorithm with `n` bins of (approximately) equal number of probabilities.
-"""
 struct EqualMass
     "Number of bins."
     n::Int
+
+    @doc """
+        EqualMass(; n::Int=10)
+
+    Create binning algorithm with `n` bins of (approximately) equal mass.
+    """
+    function EqualMass(; n::Int=10)
+        n > 0 || error("number of bins must be positive")
+        return new(n)
+    end
 end
 
 function bins(::Any, ::Any, algorithm::EqualSize)

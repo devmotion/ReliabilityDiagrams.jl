@@ -18,22 +18,29 @@ Random.seed!(1) # hide
 
 probabilities = rand(100)
 outcomes = rand(100) .< probabilities
-reliability(probabilities, outcomes, EqualMass(10); color=:blue)
+reliability(probabilities, outcomes)
 save("reliability_example.svg", current_figure()); nothing # hide
 ```
 
 ![reliability example](reliability_example.svg)
 
 ```@example makie
-lines([0, 1], [0, 1])
-reliability!(probabilities, outcomes, EqualMass(10); color=:blue, deviation=false)
+lines([0, 1], [0, 1]; color=:black)
+reliability!(probabilities, outcomes; deviation=false)
 save("reliability_example_nodeviation.svg", current_figure()); nothing # hide
 ```
 
 ![reliability example nodeviation](reliability_example_nodeviation.svg)
 
 ```@example makie
-reliability(probabilities, outcomes, EqualSize(10); markercolor=:red)
+reliability(probabilities, outcomes; consistencybars=nothing)
+save("reliability_example_noconsistencybars.svg", current_figure()); nothing # hide
+```
+
+![reliability example noconsistencybars](reliability_example_noconsistencybars.svg)
+
+```@example makie
+reliability(probabilities, outcomes; binning=EqualSize())
 save("reliability_example_equalsize.svg", current_figure()); nothing # hide
 ```
 
@@ -55,7 +62,7 @@ Random.seed!(1) # hide
 
 probabilities = rand(100)
 outcomes = rand(100) .< probabilities
-reliabilityplot(probabilities, outcomes, EqualMass(10); color=:blue)
+reliabilityplot(probabilities, outcomes)
 savefig("reliabilityplot_example.svg"); nothing # hide
 ```
 
@@ -63,14 +70,21 @@ savefig("reliabilityplot_example.svg"); nothing # hide
 
 ```@example plots
 plot([0, 1], [0, 1])
-reliabilityplot!(probabilities, outcomes, EqualMass(10); color=:blue, deviation=false)
+reliabilityplot!(probabilities, outcomes; deviation=false)
 savefig("reliabilityplot_example_nodeviation.svg"); nothing # hide
 ```
 
 ![reliabilityplot example nodeviation](reliabilityplot_example_nodeviation.svg)
 
 ```@example plots
-reliabilityplot(probabilities, outcomes, EqualSize(10); markercolor=:red)
+reliabilityplot(probabilities, outcomes; consistencybars=nothing)
+savefig("reliabilityplot_example_noconsistencybars.svg"); nothing # hide
+```
+
+![reliabilityplot example noconsistencybars](reliabilityplot_example_noconsistencybars.svg)
+
+```@example plots
+reliabilityplot(probabilities, outcomes; binning=EqualSize())
 savefig("reliabilityplot_example_equalsize.svg"); nothing # hide
 ```
 
@@ -81,4 +95,10 @@ savefig("reliabilityplot_example_equalsize.svg"); nothing # hide
 ```@docs
 EqualMass
 EqualSize
+```
+
+## Consistency bars
+
+```@docs
+ConsistencyBars
 ```

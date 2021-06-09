@@ -1,6 +1,14 @@
 @testset "binning.jl" begin
-    @testset "algorithms: EqualSize" begin
-        b = bins(rand(100), rand(100), EqualSize(10))
+    @testset "EqualSize" begin
+        # default constructor
+        @test EqualSize().n == 10
+
+        # exception
+        @test_throws ErrorException EqualSize(; n=0)
+        @test_throws ErrorException EqualSize(; n=-1)
+
+        # binning
+        b = bins(rand(100), rand(100), EqualSize())
         @test b isa Histogram{Int}
 
         @test numbins(b) == 10
@@ -18,9 +26,17 @@
         @test binindex(b, nextfloat(1.0)) == 11
     end
 
-    @testset "algorithms: EqualMass" begin
+    @testset "EqualMass" begin
+        # default constructor
+        @test EqualMass().n == 10
+
+        # exception
+        @test_throws ErrorException EqualMass(; n=0)
+        @test_throws ErrorException EqualMass(; n=-1)
+
+        # binning
         x = rand(100)
-        b = bins(x, rand(100), EqualMass(10))
+        b = bins(x, rand(100), EqualMass())
         @test b isa Histogram{Int}
 
         @test numbins(b) == 10
@@ -36,34 +52,5 @@
         @test binindex(b, quantile(x, 0.1)) == 2
         @test binindex(b, maximum(x)) == 10
         @test binindex(b, nextfloat(maximum(x))) == 11
-    end
-
-    @testset "reliability_summary" begin
-        x = rand(100)
-        y = rand(Bool, 100)
-
-        for alg in (EqualSize(10), EqualMass(10))
-            meanx, meany, b = reliability_summary(x, y, alg)
-            @test meanx isa Vector{Float64}
-            @test meany isa Vector{Float64}
-            @test b isa Histogram{Int}
-
-            @test 1 ≤ length(meanx) ≤ 10
-            @test length(meany) == length(meanx)
-            @test numbins(b) == 10
-
-            @test sum(bincounts(b)) == 100
-
-            idxs = [binindex(b, xi) for xi in x]
-            for i in 1:10
-                idxs_i = findall(==(i), idxs)
-                @test length(idxs_i) == bincounts(b)[i]
-
-                iszero(length(idxs_i)) && continue
-
-                @test meanx[i] ≈ mean(x[idxs_i])
-                @test meany[i] ≈ mean(y[idxs_i])
-            end
-        end
     end
 end

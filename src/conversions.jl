@@ -1,32 +1,95 @@
 # Makie
-function AbstractPlotting.convert_arguments(
+
+# without consistency bounds
+function Makie.convert_arguments(
     ::Type{<:Reliability},
     probabilities::AbstractVector{<:Real},
     frequencies::AbstractVector{<:Real},
 )
-    return (map(Point2f0, probabilities, frequencies),)
+    points = map(probabilities, frequencies) do x, y
+        return Makie.Point4f0(x, y, NaN32, NaN32)
+    end
+    return (points,)
 end
 
-function AbstractPlotting.convert_arguments(
+# with separate consistency bounds
+function Makie.convert_arguments(
+    ::Type{<:Reliability},
+    probabilities::AbstractVector{<:Real},
+    frequencies::AbstractVector{<:Real},
+    low::AbstractVector{<:Real},
+    high::AbstractVector{<:Real},
+)
+    points = map(probabilities, frequencies, low, high) do x, y, low, high
+        return Makie.Point4f0(x, y, low, high)
+    end
+    return (points,)
+end
+
+# with tuples of consistency bounds
+function Makie.convert_arguments(
+    ::Type{<:Reliability},
+    probabilities::AbstractVector{<:Real},
+    frequencies::AbstractVector{<:Real},
+    low_high::AbstractVector,
+)
+    points = map(probabilities, frequencies, low_high) do x, y, (low, high)
+        return Makie.Point4f0(x, y, low, high)
+    end
+    return (points,)
+end
+
+# with outcomes instead of frequencies
+function Makie.used_attributes(
+    ::Type{<:Reliability}, ::AbstractVector{<:Real}, ::AbstractVector{<:Bool}
+)
+    return (:binning, :consistencybars)
+end
+function Makie.convert_arguments(
     ::Type{P},
     probabilities::AbstractVector{<:Real},
-    outcomes::AbstractVector{Bool},
-    algorithm,
+    outcomes::AbstractVector{Bool};
+    binning=EqualMass(),
+    consistencybars=ConsistencyBars(),
 ) where {P<:Reliability}
-    meanprobabilities, meanfrequencies, _ = reliability_summary(
-        probabilities, outcomes, algorithm
+    meanprobabilities, meanfrequencies, low_high = means_and_bars(
+        probabilities, outcomes; binning=binning, consistencybars=consistencybars
     )
-    return AbstractPlotting.convert_arguments(P, meanprobabilities, meanfrequencies)
+    return Makie.convert_arguments(P, meanprobabilities, meanfrequencies, low_high)
 end
 
 # Plots
+
+# default constructor (recipe forwards arguments as tuple)
 function ReliabilityPlot(
     (
-        probabilities, outcomes, algorithm
-    )::Tuple{<:AbstractVector{<:Real},<:AbstractVector{Bool},<:Any},
+        probabilities, frequencies, low_high
+    )::Tuple{
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Tuple{<:Real,<:Real}},
+    },
 )
-    meanprobabilities, meanfrequencies, _ = reliability_summary(
-        probabilities, outcomes, algorithm
-    )
-    return ReliabilityPlot(meanprobabilities, meanfrequencies)
+    return ReliabilityPlot(probabilities, frequencies, low_high)
+end
+function ReliabilityPlot(
+    (
+        probabilities, frequencies, low, high
+    )::Tuple{
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+    },
+)
+    return ReliabilityPlot((probabilities, frequencies, map(tuple, low, high)))
+end
+
+# without consistency bars
+function ReliabilityPlot(
+    (
+        probabilities, frequencies_or_outcomes
+    )::Tuple{<:AbstractVector{<:Real},<:AbstractVector{<:Real}},
+)
+    return ReliabilityPlot(probabilities, frequencies_or_outcomes, nothing)
 end

@@ -1,15 +1,23 @@
 name = "ReliabilityDiagrams"
 uuid = "e5f51471-6270-49e4-a15a-f1cfbff4f856"
 authors = ["David Widmann"]
-version = "0.1.1"
+version = "0.2.0"
 
 [deps]
-AbstractPlotting = "537997a7-5e4e-5d89-9595-2241ea00577e"
+ConsistencyResampling = "4937dc1f-c7a3-5772-9d42-4a8277f2eb51"
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 
 [compat]
-AbstractPlotting = "0.17, 0.18"
+ConsistencyResampling = "0.3"
+DataStructures = "0.18"
+Makie = "0.13"
 RecipesBase = "1"
 StatsBase = "0.33"
+StructArrays = "0.5"
 julia = "1.3"
