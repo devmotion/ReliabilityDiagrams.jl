@@ -8,7 +8,14 @@ end
 using ReliabilityDiagrams
 
 DocMeta.setdocmeta!(
-    ReliabilityDiagrams, :DocTestSetup, :(using ReliabilityDiagrams); recursive=true
+    ReliabilityDiagrams,
+    :DocTestSetup,
+    quote
+        using ReliabilityDiagrams
+        using CairoMakie
+        using Plots
+    end;
+    recursive=true,
 )
 
 makedocs(;

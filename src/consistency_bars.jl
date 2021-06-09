@@ -2,7 +2,7 @@ struct ConsistencyBars{T<:Real}
     samples::Int
     quantiles::Tuple{T,T}
 
-    """
+    @doc """
         ConsistencyBars(; samples::Int=1_000, coverage::Real=0.95)
 
     Create consistency bars that cover a proportion of `coverage` samples obtained

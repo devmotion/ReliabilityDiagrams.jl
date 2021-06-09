@@ -93,12 +93,12 @@ savefig("reliabilityplot_example_equalsize.svg"); nothing # hide
 ## Binning algorithms
 
 ```@docs
-EqualMass()
-EqualSize()
+EqualMass
+EqualSize
 ```
 
 ## Consistency bars
 
 ```@docs
-ConsistencyBars()
+ConsistencyBars
 ```

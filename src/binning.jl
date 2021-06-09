@@ -4,10 +4,10 @@ struct EqualSize
     "Number of bins."
     n::Int
 
-    """
+    @doc """
         EqualSize(; n::Int=10)
 
-    Create binning algorithm of the probability simplex with `n` bins of the same size.
+    Create binning algorithm with `n` bins of the same size.
     """
     function EqualSize(; n::Int=10)
         n > 0 || error("number of bins must be positive")
@@ -19,10 +19,10 @@ struct EqualMass
     "Number of bins."
     n::Int
 
-    """
+    @doc """
         EqualMass(; n::Int=10)
 
-    Create binning algorithm with `n` bins of (approximately) equal number of probabilities.
+    Create binning algorithm with `n` bins of (approximately) equal mass.
     """
     function EqualMass(; n::Int=10)
         n > 0 || error("number of bins must be positive")
