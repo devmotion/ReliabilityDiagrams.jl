@@ -20,11 +20,13 @@
             dict, ConsistencyBars(; samples=100_000)
         )
         @test ranges isa Vector{Tuple{Float64,Float64}}
+        @test all(0 ≤ x[1] ≤ x[2] ≤ 1 for x in ranges)
         @test length(ranges) == 3
         for ((k, probs), range) in zip(dict, ranges)
             ranges_k = ReliabilityDiagrams.consistency_ranges(
                 probs, ConsistencyBars(; samples=100_000)
             )
+            @test 0 ≤ ranges_k[1] ≤ ranges_k[2] ≤ 1
             @test ranges_k[1] ≈ range[1] atol = 1e-2
             @test ranges_k[2] ≈ range[2] atol = 1e-2
         end
@@ -80,7 +82,9 @@
             if consistencybars === nothing
                 @test all(isnan(x[1]) && isnan(x[2]) for x in ranges)
             else
-                @test all(x[1] ≤ y ≤ x[2] for (x, y) in zip(ranges, meanprobabilities))
+                @test all(
+                    0 ≤ x[1] ≤ y ≤ x[2] ≤ 1 for (x, y) in zip(ranges, meanprobabilities)
+                )
             end
         end
 
