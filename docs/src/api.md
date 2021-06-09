@@ -25,7 +25,7 @@ save("reliability_example.svg", current_figure()); nothing # hide
 ![reliability example](reliability_example.svg)
 
 ```@example makie
-lines([0, 1], [0, 1])
+lines([0, 1], [0, 1]; color=:black)
 reliability!(probabilities, outcomes; deviation=false)
 save("reliability_example_nodeviation.svg", current_figure()); nothing # hide
 ```
@@ -93,12 +93,12 @@ savefig("reliabilityplot_example_equalsize.svg"); nothing # hide
 ## Binning algorithms
 
 ```@docs
-EqualMass
-EqualSize
+EqualMass()
+EqualSize()
 ```
 
 ## Consistency bars
 
 ```@docs
-ConsistencyBars
+ConsistencyBars()
 ```
