@@ -58,9 +58,9 @@ version = "1.0.5"
 
 [[CairoMakie]]
 deps = ["Base64", "Cairo", "Colors", "FFTW", "FileIO", "FreeType", "GeometryBasics", "LinearAlgebra", "Makie", "SHA", "StaticArrays"]
-git-tree-sha1 = "13bfc08f345bbcaa73f58bf33e0706828839cc72"
+git-tree-sha1 = "441d21d4c75c845d65a472262f545d702afd30df"
 uuid = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
-version = "0.5.9"
+version = "0.6.0"
 
 [[Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
@@ -70,9 +70,9 @@ version = "1.16.0+6"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "8b31cc69cbc38c5c826aaa1c890c694be3622d99"
+git-tree-sha1 = "d659e42240c2162300b321f05173cab5cc40a5ba"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "0.10.3"
+version = "0.10.4"
 
 [[ColorBrewer]]
 deps = ["Colors", "JSON", "Test"]
@@ -344,10 +344,10 @@ uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
 version = "2.8.1+0"
 
 [[IOCapture]]
-deps = ["Logging"]
-git-tree-sha1 = "1868e4e7ad2f93d8de0904d89368c527b46aa6a1"
+deps = ["Logging", "Random"]
+git-tree-sha1 = "f7be53659ab06ddc986428d3a9dcc95f6fa6705a"
 uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
-version = "0.2.1"
+version = "0.2.2"
 
 [[IfElse]]
 git-tree-sha1 = "28e837ff3e7a6c3cdb252ce49fb412c8eb3caeef"
@@ -565,10 +565,16 @@ uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 version = "0.5.6"
 
 [[Makie]]
-deps = ["Animations", "Artifacts", "ColorBrewer", "ColorSchemes", "ColorTypes", "Colors", "Contour", "Distributions", "DocStringExtensions", "FFMPEG", "FileIO", "FixedPointNumbers", "Formatting", "FreeType", "FreeTypeAbstraction", "GeometryBasics", "GridLayoutBase", "ImageIO", "IntervalSets", "Isoband", "KernelDensity", "LinearAlgebra", "Markdown", "Match", "Observables", "Packing", "PlotUtils", "PolygonOps", "Printf", "Random", "Serialization", "Showoff", "SignedDistanceFields", "SparseArrays", "StaticArrays", "Statistics", "StatsBase", "StatsFuns", "StructArrays", "UnicodeFun"]
-git-tree-sha1 = "121f8641845056c31ea478945c08a79fe00ab9c5"
+deps = ["Animations", "Artifacts", "ColorBrewer", "ColorSchemes", "ColorTypes", "Colors", "Contour", "Distributions", "DocStringExtensions", "FFMPEG", "FileIO", "FixedPointNumbers", "Formatting", "FreeType", "FreeTypeAbstraction", "GeometryBasics", "GridLayoutBase", "ImageIO", "IntervalSets", "Isoband", "KernelDensity", "LinearAlgebra", "MakieCore", "Markdown", "Match", "Observables", "Packing", "PlotUtils", "PolygonOps", "Printf", "Random", "Serialization", "Showoff", "SignedDistanceFields", "SparseArrays", "StaticArrays", "Statistics", "StatsBase", "StatsFuns", "StructArrays", "UnicodeFun"]
+git-tree-sha1 = "7cee23b26d514338759aca2297259e79b692aaa2"
 uuid = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
-version = "0.13.14"
+version = "0.14.0"
+
+[[MakieCore]]
+deps = ["Observables"]
+git-tree-sha1 = "7bcc8323fb37523a6a51ade2234eee27a11114c8"
+uuid = "20f20a25-4f0e-4fdf-b5d1-57303727442b"
+version = "0.1.3"
 
 [[MappedArrays]]
 git-tree-sha1 = "18d3584eebc861e311a552cbb67723af8edff5de"
@@ -679,9 +685,9 @@ version = "8.44.0+0"
 
 [[PDMats]]
 deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse"]
-git-tree-sha1 = "f82a0e71f222199de8e9eb9a09977bd0767d52a0"
+git-tree-sha1 = "4dd403333bcf0909341cfe57ec115152f937d7d8"
 uuid = "90014a1f-27ba-587c-ab20-58faa44d9150"
-version = "0.11.0"
+version = "0.11.1"
 
 [[PNGFiles]]
 deps = ["Base64", "CEnum", "ImageCore", "IndirectArrays", "OffsetArrays", "libpng_jll"]
@@ -813,7 +819,7 @@ version = "1.1.0"
 deps = ["ConsistencyResampling", "DataStructures", "Makie", "Random", "RecipesBase", "Statistics", "StatsBase", "StructArrays"]
 path = ".."
 uuid = "e5f51471-6270-49e4-a15a-f1cfbff4f856"
-version = "0.2.1"
+version = "0.2.2"
 
 [[Requires]]
 deps = ["UUIDs"]
