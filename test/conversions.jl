@@ -7,7 +7,7 @@
             # without consistency bounds
             points = convert_arguments(Reliability, probabilities, frequencies)
             @test length(points) == 1
-            @test points[1] isa Vector{Point4f0}
+            @test points[1] isa Vector{Point4f}
             @test map(first, points[1]) ≈ probabilities
             @test map(x -> x[2], points[1]) ≈ frequencies
             @test all(isnan(x[3]) for x in points[1])
@@ -18,7 +18,7 @@
             high = min.(1, probabilities .+ rand.())
             points = convert_arguments(Reliability, probabilities, frequencies, low, high)
             @test length(points) == 1
-            @test points[1] isa Vector{Point4f0}
+            @test points[1] isa Vector{Point4f}
             @test map(first, points[1]) ≈ probabilities
             @test map(x -> x[2], points[1]) ≈ frequencies
             @test map(x -> x[3], points[1]) ≈ low
@@ -27,7 +27,7 @@
             low_high = map(tuple, low, high)
             points = convert_arguments(Reliability, probabilities, frequencies, low_high)
             @test length(points) == 1
-            @test points[1] isa Vector{Point4f0}
+            @test points[1] isa Vector{Point4f}
             @test map(first, points[1]) ≈ probabilities
             @test map(x -> x[2], points[1]) ≈ frequencies
             @test map(x -> x[3], points[1]) ≈ low
@@ -49,7 +49,7 @@
                     consistencybars=consistencybars,
                 )
                 @test length(points) == 1
-                @test points[1] isa Vector{Point4f0}
+                @test points[1] isa Vector{Point4f}
                 @test length(points[1]) == binning.n
 
                 meanprobs, meanfreqs, _ = ReliabilityDiagrams.means_and_bars(

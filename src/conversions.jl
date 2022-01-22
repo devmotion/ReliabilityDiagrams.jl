@@ -7,7 +7,7 @@ function Makie.convert_arguments(
     frequencies::AbstractVector{<:Real},
 )
     points = map(probabilities, frequencies) do x, y
-        return Makie.Point4f0(x, y, NaN32, NaN32)
+        return Makie.Point4f(x, y, NaN32, NaN32)
     end
     return (points,)
 end
@@ -21,7 +21,7 @@ function Makie.convert_arguments(
     high::AbstractVector{<:Real},
 )
     points = map(probabilities, frequencies, low, high) do x, y, low, high
-        return Makie.Point4f0(x, y, low, high)
+        return Makie.Point4f(x, y, low, high)
     end
     return (points,)
 end
@@ -34,7 +34,7 @@ function Makie.convert_arguments(
     low_high::AbstractVector,
 )
     points = map(probabilities, frequencies, low_high) do x, y, (low, high)
-        return Makie.Point4f0(x, y, low, high)
+        return Makie.Point4f(x, y, low, high)
     end
     return (points,)
 end
