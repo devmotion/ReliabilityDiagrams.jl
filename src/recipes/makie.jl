@@ -63,7 +63,7 @@ Weather and forecasting, 22(3), pp. 651-661.
         markervisible=Makie.theme(scene, :visible),
         strokecolor=Makie.theme(scene, :markerstrokecolor),
         strokewidth=Makie.theme(scene, :markerstrokewidth),
-        deviation=Makie.Node(true),
+        deviation=Makie.Observable(true),
         barswhiskerwidth=0,
         barscolor=Makie.theme(scene, :linecolor),
         barscolormap=Makie.theme(scene, :colormap),
@@ -117,7 +117,7 @@ function Makie.plot!(plot::Reliability)
     # compute pairs of mean predictions and (deviations of) mean outcomes
     x_y = Makie.lift(x_y_low_high, deviation) do x_y_low_high, deviation
         return map(x_y_low_high) do (x, y, _, _)
-            return deviation ? Makie.Point2f0(x, y - x) : Makie.Point2f0(x, y)
+            return deviation ? Makie.Point2f(x, y - x) : Makie.Point2f(x, y)
         end
     end
 
@@ -125,9 +125,9 @@ function Makie.plot!(plot::Reliability)
     x_low_high = Makie.lift(x_y_low_high, deviation) do x_y_low_high, deviation
         return map(x_y_low_high) do (x, _, low, high)
             return if deviation
-                Makie.Point3f0(x, low - x, high - x)
+                Makie.Point3f(x, low - x, high - x)
             else
-                Makie.Point3f0(x, low, high)
+                Makie.Point3f(x, low, high)
             end
         end
     end
