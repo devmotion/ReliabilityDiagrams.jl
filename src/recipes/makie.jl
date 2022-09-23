@@ -115,7 +115,9 @@ See also: [`EqualMass`](@ref), [`EqualSize`](@ref), [`ConsistencyBars`](@ref)
 reliability(::AbstractVector{<:Real}, ::AbstractVector{Bool})
 
 # workaround to set default labels (inspired by implementation of `rainclouds`)
-function Makie.plot!(ax::Makie.Axis, ::Type{R}, attrs::Makie.Attributes, args...; kwargs...) where {R<:Reliability}
+function Makie.plot!(
+    ax::Makie.Axis, ::Type{R}, attrs::Makie.Attributes, args...; kwargs...
+) where {R<:Reliability}
     # Copied from the default implementation in
     # https://github.com/MakieOrg/Makie.jl/blob/03fb7ac6096447341006d454982cbee25238e7fb/src/makielayout/blocks/axis.jl#L764
     allattrs = merge(attrs, Makie.Attributes(kwargs))
