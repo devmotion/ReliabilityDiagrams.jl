@@ -103,7 +103,7 @@ RecipesBase.@recipe function f(plot::ReliabilityPlot)
     seriestype --> :line
     markershape --> :circle
     xlabel --> "confidence"
-    ylabel --> deviation ? "empirical deviation" : "empirical frequency"
+    ylabel --> (deviation ? "empirical deviation" : "empirical frequency")
 
     # add consistency bars, taking into account the `deviation` keyword argument
     if low_high !== nothing
