@@ -115,7 +115,9 @@ See also: [`EqualMass`](@ref), [`EqualSize`](@ref), [`ConsistencyBars`](@ref)
 reliability(::AbstractVector{<:Real}, ::AbstractVector{Bool})
 
 # workaround to set default labels (inspired by implementation of `rainclouds`)
-function Makie.plot!(ax::Makie.Axis, ::Type{R}, attrs::Makie.Attributes, args...; kwargs...) where {R<:Reliability}
+function Makie.plot!(
+    ax::Makie.Axis, ::Type{R}, attrs::Makie.Attributes, args...; kwargs...
+) where {R<:Reliability}
     # Create plot
     allattrs = merge(attrs, Makie.Attributes(kwargs))
     plot = Makie.plot!(ax.scene, R, allattrs, args...)
@@ -136,7 +138,7 @@ function Makie.plot!(ax::Makie.Axis, ::Type{R}, attrs::Makie.Attributes, args...
     end
 
     # Readjust limits
-    Makie.reset_limits!(ax)        
+    Makie.reset_limits!(ax)
 
     return plot
 end
