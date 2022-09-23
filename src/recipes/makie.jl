@@ -15,6 +15,11 @@ observed frequencies match the predicted probabilities.
 
 $(Makie.ATTRIBUTES)
 
+### General Axis Keywords
+
+- `xlabel`: Label of x axis (default: `confidence`)
+- `ylabel`: Label of y axis (default: if `deviation == true`, then `empirical deviation`, otherwise `empirical frequency`)
+
 # Examples
 
 ```jldoctest
@@ -108,6 +113,42 @@ julia> # custom options: without consistency bars
 See also: [`EqualMass`](@ref), [`EqualSize`](@ref), [`ConsistencyBars`](@ref)
 """
 reliability(::AbstractVector{<:Real}, ::AbstractVector{Bool})
+
+# workaround to set default labels (inspired by implementation of `rainclouds`)
+function Makie.plot!(
+    ax::Makie.Axis, ::Type{R}, attrs::Makie.Attributes, args...; kwargs...
+) where {R<:Reliability}
+    # Copied from the default implementation in
+    # https://github.com/MakieOrg/Makie.jl/blob/03fb7ac6096447341006d454982cbee25238e7fb/src/makielayout/blocks/axis.jl#L764
+    allattrs = merge(attrs, Makie.Attributes(kwargs))
+    Makie._disallow_keyword(:axis, allattrs)
+    Makie._disallow_keyword(:figure, allattrs)
+    cycle = Makie.get_cycle_for_plottype(allattrs, R)
+    Makie.add_cycle_attributes!(allattrs, R, cycle, ax.cycler, ax.palette)
+
+    # Create plot
+    plot = Makie.plot!(ax.scene, R, allattrs, args...)
+
+    # Set labels: If not provided, use default values
+    if haskey(allattrs, :xlabel)
+        ax.xlabel = allattrs.xlabel[]
+    else
+        ax.xlabel = "confidence"
+    end
+    if haskey(allattrs, :ylabel)
+        ax.ylabel = allattrs.ylabel[]
+    else
+        Makie.on(plot.attributes.deviation) do deviation
+            ax.ylabel = deviation === true ? "empirical deviation" : "empirical frequency"
+        end
+        Makie.notify(plot.attributes.deviation)
+    end
+
+    # Readjust limits
+    Makie.reset_limits!(ax)
+
+    return plot
+end
 
 function Makie.plot!(plot::Reliability)
     # extract
