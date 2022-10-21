@@ -15,7 +15,6 @@
 ## Related packages
 
 - [CalibrationErrors.jl](https://github.com/devmotion/CalibrationErrors.jl): Estimation of calibration errors such as the expected calibration error (ECE), the squared kernel calibration error (SKCE), and the unnormalized calibration mean embedding (UCME).
-- [CalibrationErrorsDistributions.jl](https://github.com/devmotion/CalibrationErrorsDistributions.jl): Estimation of calibration errors for probabilistic predictive models that output probability distributions from [Distributions.jl](https://github.com/JuliaStats/Distributions.jl).
 - [CalibrationTests.jl](https://github.com/devmotion/CalibrationTests.jl): Statistical hypothesis tests of calibration.
 
 ## References
