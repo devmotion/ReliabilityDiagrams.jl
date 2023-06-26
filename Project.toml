@@ -1,7 +1,7 @@
 name = "ReliabilityDiagrams"
 uuid = "e5f51471-6270-49e4-a15a-f1cfbff4f856"
 authors = ["David Widmann <david.widmann@it.uu.se>"]
-version = "0.2.8"
+version = "0.2.9"
 
 [deps]
 ConsistencyResampling = "4937dc1f-c7a3-5772-9d42-4a8277f2eb51"
