@@ -67,7 +67,9 @@ RecipesBase.@recipe function f(plot::ReliabilityPlot)
     probs, freqs_nodeviation, low_high = if y isa AbstractVector{Bool}
         binning = get(plotattributes, :binning, EqualMass())
         consistencybars = get(plotattributes, :consistencybars, ConsistencyBars())
-        means_and_bars(x, y; binning=binning, consistencybars=consistencybars)
+        ReliabilityDiagrams.means_and_bars(
+            x, y; binning=binning, consistencybars=consistencybars
+        )
     else
         x, y, plot.low_high
     end

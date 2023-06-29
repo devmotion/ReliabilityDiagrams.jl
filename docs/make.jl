@@ -19,7 +19,20 @@ DocMeta.setdocmeta!(
 )
 
 makedocs(;
-    modules=[ReliabilityDiagrams],
+    # Workaround for https://github.com/JuliaDocs/Documenter.jl/issues/2124
+    modules=[
+        ReliabilityDiagrams,
+        if isdefined(Base, :get_extension)
+            Base.get_extension(ReliabilityDiagrams, :ReliabilityDiagramsMakieExt)
+        else
+            ReliabilityDiagrams.ReliabilityDiagramsMakieExt
+        end,
+        if isdefined(Base, :get_extension)
+            Base.get_extension(ReliabilityDiagrams, :ReliabilityDiagramsRecipesBaseExt)
+        else
+            ReliabilityDiagrams.ReliabilityDiagramsRecipesBaseExt
+        end,
+    ],
     authors="David Widmann",
     repo="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/{commit}{path}#{line}",
     sitename="ReliabilityDiagrams.jl",
