@@ -6,7 +6,7 @@
     Aqua.test_all(
         ReliabilityDiagrams;
         ambiguities=false,
-        project_toml_formatting=VERSION > v"1.6" || !haskey(ENV, "GITHUB_ACTIONS"),
+        project_toml_formatting=VERSION >= v"1.7" || !haskey(ENV, "GITHUB_ACTIONS"),
     )
     Aqua.test_ambiguities([ReliabilityDiagrams])
 end
