@@ -7,6 +7,10 @@ end
 
 using ReliabilityDiagrams
 
+# Load weak dependencies (otherwise modules below cannot be loaded)
+using CairoMakie
+using Plots
+
 DocMeta.setdocmeta!(
     ReliabilityDiagrams,
     :DocTestSetup,
