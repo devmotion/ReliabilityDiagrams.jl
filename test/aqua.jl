@@ -1,6 +1,12 @@
 @testset "Aqua" begin
     # Test ambiguities separately without Base and Core
     # Ref: https://github.com/JuliaTesting/Aqua.jl/issues/77
-    Aqua.test_all(ReliabilityDiagrams; ambiguities=false)
+    # Only test Project.toml formatting on Julia > 1.6 when running Github action
+    # Ref: https://github.com/JuliaTesting/Aqua.jl/issues/105
+    Aqua.test_all(
+        ReliabilityDiagrams;
+        ambiguities=false,
+        project_toml_formatting=VERSION > v"1.6" || !haskey(ENV, "GITHUB_ACTIONS"),
+    )
     Aqua.test_ambiguities([ReliabilityDiagrams])
 end
