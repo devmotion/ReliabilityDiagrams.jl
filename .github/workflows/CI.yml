@@ -41,7 +41,6 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
-      - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
         with:
           coverage: ${{ matrix.os == 'ubuntu-latest' && matrix.version == '1' }}
