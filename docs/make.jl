@@ -47,9 +47,7 @@ DocMeta.setdocmeta!(
 makedocs(;
     # Workaround for https://github.com/JuliaDocs/Documenter.jl/issues/2124
     modules=[
-        ReliabilityDiagrams,
-        ReliabilityDiagramsMakieExt,
-        ReliabilityDiagramsRecipesBaseExt,
+        ReliabilityDiagrams, ReliabilityDiagramsMakieExt, ReliabilityDiagramsRecipesBaseExt
     ],
     authors="David Widmann",
     repo="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/{commit}{path}#{line}",
