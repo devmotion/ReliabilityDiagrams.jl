@@ -164,6 +164,4 @@ function ReliabilityPlot(
     return ReliabilityPlot(probabilities, frequencies_or_outcomes, nothing)
 end
 
-
-
 end # module
