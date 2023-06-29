@@ -1,3 +1,12 @@
+module ReliabilityDiagramsRecipesBaseExt
+
+using ReliabilityDiagrams
+using RecipesBase: RecipesBase
+
+import ReliabilityDiagrams: reliabilityplot, reliabilityplot!
+
+## Recipes
+
 """
     reliabilityplot(probabilities, frequencies; deviation=true, kwargs...)
     reliabilityplot(probabilities, frequencies, low_high; deviation=true, kwargs...)
@@ -49,40 +58,6 @@ RecipesBase.@userplot struct ReliabilityPlot{X<:AbstractVector,Y<:AbstractVector
     low_high::T
 end
 
-"""
-    reliabilityplot(
-        probabilities::AbstractVector{<:Real},
-        outcomes::AbstractVector{Bool};
-        binning=EqualMass(),
-        consistencybars=ConsistencyBars(),
-        kwargs...,
-    )
-
-Plot a reliability diagram of the observed frequencies versus the mean probabilities
-in different clusters together with a set of consistency bars.
-
-Optionally, the binning algorithm that is used to form the clusters and the consistency
-bars can be configured with the `binning` and `consistencybars` keyword arguments. If
-`consistencybars === nothing`, then no consistency bars are computed.
-
-# Examples
-
-```jldoctest
-julia> probabilities = rand(10);
-
-julia> outcomes = rand(Bool, 10);
-
-julia> # default binning and consistency bars
-       reliabilityplot(probabilities, outcomes);
-
-julia> # custom options: without consistency bars
-       reliabilityplot(probabilities, outcomes; consistencybars=nothing);
-```
-
-See also: [`EqualMass`](@ref), [`EqualSize`](@ref), [`ConsistencyBars`](@ref)
-"""
-reliabilityplot(::AbstractVector{<:Real}, ::AbstractVector{Bool}; kwargs...)
-
 RecipesBase.@recipe function f(plot::ReliabilityPlot)
     # extract x and y values
     x = plot.x
@@ -118,3 +93,77 @@ RecipesBase.@recipe function f(plot::ReliabilityPlot)
 
     return probs, freqs
 end
+
+"""
+    reliabilityplot(
+        probabilities::AbstractVector{<:Real},
+        outcomes::AbstractVector{Bool};
+        binning=EqualMass(),
+        consistencybars=ConsistencyBars(),
+        kwargs...,
+    )
+
+Plot a reliability diagram of the observed frequencies versus the mean probabilities
+in different clusters together with a set of consistency bars.
+
+Optionally, the binning algorithm that is used to form the clusters and the consistency
+bars can be configured with the `binning` and `consistencybars` keyword arguments. If
+`consistencybars === nothing`, then no consistency bars are computed.
+
+# Examples
+
+```jldoctest
+julia> probabilities = rand(10);
+
+julia> outcomes = rand(Bool, 10);
+
+julia> # default binning and consistency bars
+       reliabilityplot(probabilities, outcomes);
+
+julia> # custom options: without consistency bars
+       reliabilityplot(probabilities, outcomes; consistencybars=nothing);
+```
+
+See also: [`EqualMass`](@ref), [`EqualSize`](@ref), [`ConsistencyBars`](@ref)
+"""
+reliabilityplot(::AbstractVector{<:Real}, ::AbstractVector{Bool}; kwargs...)
+
+## Additional constructors
+
+# default constructor (recipe forwards arguments as tuple)
+function ReliabilityPlot(
+    (
+        probabilities, frequencies, low_high
+    )::Tuple{
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Tuple{<:Real,<:Real}},
+    },
+)
+    return ReliabilityPlot(probabilities, frequencies, low_high)
+end
+function ReliabilityPlot(
+    (
+        probabilities, frequencies, low, high
+    )::Tuple{
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+    },
+)
+    return ReliabilityPlot((probabilities, frequencies, map(tuple, low, high)))
+end
+
+# without consistency bars
+function ReliabilityPlot(
+    (
+        probabilities, frequencies_or_outcomes
+    )::Tuple{<:AbstractVector{<:Real},<:AbstractVector{<:Real}},
+)
+    return ReliabilityPlot(probabilities, frequencies_or_outcomes, nothing)
+end
+
+
+
+end # module
