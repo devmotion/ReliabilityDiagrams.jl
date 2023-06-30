@@ -1,11 +1,5 @@
-using Documenter
-
-# Print `@debug` statements (https://github.com/JuliaDocs/Documenter.jl/issues/955)
-if haskey(ENV, "GITHUB_ACTIONS")
-    ENV["JULIA_DEBUG"] = "Documenter"
-end
-
 using ReliabilityDiagrams
+using Documenter
 
 # Load weak dependencies (otherwise modules below cannot be loaded)
 using CairoMakie
