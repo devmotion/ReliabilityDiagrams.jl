@@ -16,7 +16,8 @@ concurrency:
 jobs:
   docs:
     permissions:
-      contents: write  
+      contents: write
+      statuses: write
     name: Documentation
     runs-on: ubuntu-latest
     steps:
