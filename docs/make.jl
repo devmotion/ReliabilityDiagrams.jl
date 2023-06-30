@@ -7,19 +7,48 @@ end
 
 using ReliabilityDiagrams
 
+# Load weak dependencies (otherwise modules below cannot be loaded)
+using CairoMakie
+using Plots
+
+# Extensions
+const ReliabilityDiagramsMakieExt = if isdefined(Base, :get_extension)
+    Base.get_extension(ReliabilityDiagrams, :ReliabilityDiagramsMakieExt)
+else
+    ReliabilityDiagrams.ReliabilityDiagramsMakieExt
+end
+const ReliabilityDiagramsRecipesBaseExt = if isdefined(Base, :get_extension)
+    Base.get_extension(ReliabilityDiagrams, :ReliabilityDiagramsRecipesBaseExt)
+else
+    ReliabilityDiagrams.ReliabilityDiagramsRecipesBaseExt
+end
+
+# Import statements for doctests
 DocMeta.setdocmeta!(
-    ReliabilityDiagrams,
+    ReliabilityDiagramsMakieExt,
     :DocTestSetup,
     quote
         using ReliabilityDiagrams
         using CairoMakie
+    end;
+    recursive=true,
+)
+DocMeta.setdocmeta!(
+    ReliabilityDiagramsRecipesBaseExt,
+    :DocTestSetup,
+    quote
+        using ReliabilityDiagrams
         using Plots
     end;
     recursive=true,
 )
 
+# Build docs and run doctests
 makedocs(;
-    modules=[ReliabilityDiagrams],
+    # Workaround for https://github.com/JuliaDocs/Documenter.jl/issues/2124
+    modules=[
+        ReliabilityDiagrams, ReliabilityDiagramsMakieExt, ReliabilityDiagramsRecipesBaseExt
+    ],
     authors="David Widmann",
     repo="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/{commit}{path}#{line}",
     sitename="ReliabilityDiagrams.jl",
@@ -33,6 +62,7 @@ makedocs(;
     checkdocs=:exports,
 )
 
+# Deploy docs on Github
 deploydocs(;
     repo="github.com/devmotion/ReliabilityDiagrams.jl", push_preview=true, devbranch="main"
 )

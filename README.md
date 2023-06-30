@@ -9,6 +9,7 @@
 [![Coverage](https://codecov.io/gh/devmotion/ReliabilityDiagrams.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/devmotion/ReliabilityDiagrams.jl)
 [![Coverage](https://coveralls.io/repos/github/devmotion/ReliabilityDiagrams.jl/badge.svg?branch=main)](https://coveralls.io/github/devmotion/ReliabilityDiagrams.jl?branch=main)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
+[![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
 
 [![Example of a reliability diagram](https://devmotion.github.io/ReliabilityDiagrams.jl/dev/reliability_example.svg)](https://devmotion.github.io/ReliabilityDiagrams.jl/dev)
 

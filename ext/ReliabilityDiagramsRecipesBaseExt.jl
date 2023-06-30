@@ -1,3 +1,12 @@
+module ReliabilityDiagramsRecipesBaseExt
+
+using ReliabilityDiagrams
+using RecipesBase: RecipesBase
+
+import ReliabilityDiagrams: reliabilityplot, reliabilityplot!
+
+## Recipes
+
 """
     reliabilityplot(probabilities, frequencies; deviation=true, kwargs...)
     reliabilityplot(probabilities, frequencies, low_high; deviation=true, kwargs...)
@@ -49,6 +58,44 @@ RecipesBase.@userplot struct ReliabilityPlot{X<:AbstractVector,Y<:AbstractVector
     low_high::T
 end
 
+RecipesBase.@recipe function f(plot::ReliabilityPlot)
+    # extract x and y values
+    x = plot.x
+    y = plot.y
+
+    # compute mean probabilities and frequencies and consistency bars
+    probs, freqs_nodeviation, low_high = if y isa AbstractVector{Bool}
+        binning = get(plotattributes, :binning, EqualMass())
+        consistencybars = get(plotattributes, :consistencybars, ConsistencyBars())
+        ReliabilityDiagrams.means_and_bars(
+            x, y; binning=binning, consistencybars=consistencybars
+        )
+    else
+        x, y, plot.low_high
+    end
+    deviation::Bool = get(plotattributes, :deviation, true)
+    freqs = deviation ? freqs_nodeviation - probs : freqs_nodeviation - zero(probs)
+
+    # default attributes
+    seriestype --> :line
+    markershape --> :circle
+    xlabel --> "confidence"
+    ylabel --> (deviation ? "empirical deviation" : "empirical frequency")
+
+    # add consistency bars, taking into account the `deviation` keyword argument
+    if low_high !== nothing
+        low = map(low_high, freqs_nodeviation) do (low, _), freq
+            return freq - low
+        end
+        high = map(low_high, freqs_nodeviation) do (_, high), freq
+            return high - freq
+        end
+        yerror := (low, high)
+    end
+
+    return probs, freqs
+end
+
 """
     reliabilityplot(
         probabilities::AbstractVector{<:Real},
@@ -83,38 +130,40 @@ See also: [`EqualMass`](@ref), [`EqualSize`](@ref), [`ConsistencyBars`](@ref)
 """
 reliabilityplot(::AbstractVector{<:Real}, ::AbstractVector{Bool}; kwargs...)
 
-RecipesBase.@recipe function f(plot::ReliabilityPlot)
-    # extract x and y values
-    x = plot.x
-    y = plot.y
+## Additional constructors
 
-    # compute mean probabilities and frequencies and consistency bars
-    probs, freqs_nodeviation, low_high = if y isa AbstractVector{Bool}
-        binning = get(plotattributes, :binning, EqualMass())
-        consistencybars = get(plotattributes, :consistencybars, ConsistencyBars())
-        means_and_bars(x, y; binning=binning, consistencybars=consistencybars)
-    else
-        x, y, plot.low_high
-    end
-    deviation::Bool = get(plotattributes, :deviation, true)
-    freqs = deviation ? freqs_nodeviation - probs : freqs_nodeviation - zero(probs)
-
-    # default attributes
-    seriestype --> :line
-    markershape --> :circle
-    xlabel --> "confidence"
-    ylabel --> (deviation ? "empirical deviation" : "empirical frequency")
-
-    # add consistency bars, taking into account the `deviation` keyword argument
-    if low_high !== nothing
-        low = map(low_high, freqs_nodeviation) do (low, _), freq
-            return freq - low
-        end
-        high = map(low_high, freqs_nodeviation) do (_, high), freq
-            return high - freq
-        end
-        yerror := (low, high)
-    end
-
-    return probs, freqs
+# default constructor (recipe forwards arguments as tuple)
+function ReliabilityPlot(
+    (
+        probabilities, frequencies, low_high
+    )::Tuple{
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Tuple{<:Real,<:Real}},
+    },
+)
+    return ReliabilityPlot(probabilities, frequencies, low_high)
 end
+function ReliabilityPlot(
+    (
+        probabilities, frequencies, low, high
+    )::Tuple{
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+        <:AbstractVector{<:Real},
+    },
+)
+    return ReliabilityPlot((probabilities, frequencies, map(tuple, low, high)))
+end
+
+# without consistency bars
+function ReliabilityPlot(
+    (
+        probabilities, frequencies_or_outcomes
+    )::Tuple{<:AbstractVector{<:Real},<:AbstractVector{<:Real}},
+)
+    return ReliabilityPlot(probabilities, frequencies_or_outcomes, nothing)
+end
+
+end # module
