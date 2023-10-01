@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>API · ReliabilityDiagrams.jl</title><script data-outdated-warner src="../assets/warner.js"></script><link rel="canonical" href="https://devmotion.github.io/ReliabilityDiagrams.jl/api/"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ReliabilityDiagrams.jl</a></span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>API</a><ul class="internal"><li><a class="tocitem" href="#Diagrams"><span>Diagrams</span></a></li><li><a class="tocitem" href="#Binning-algorithms"><span>Binning algorithms</span></a></li><li><a class="tocitem" href="#Consistency-bars"><span>Consistency bars</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>API</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>API</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/master/docs/src/api.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="API"><a class="docs-heading-anchor" href="#API">API</a><a id="API-1"></a><a class="docs-heading-anchor-permalink" href="#API" title="Permalink"></a></h1><h2 id="Diagrams"><a class="docs-heading-anchor" href="#Diagrams">Diagrams</a><a id="Diagrams-1"></a><a class="docs-heading-anchor-permalink" href="#Diagrams" title="Permalink"></a></h2><h3 id="Makie"><a class="docs-heading-anchor" href="#Makie">Makie</a><a id="Makie-1"></a><a class="docs-heading-anchor-permalink" href="#Makie" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-binding" id="ReliabilityDiagrams.reliability" href="#ReliabilityDiagrams.reliability"><code>ReliabilityDiagrams.reliability</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">reliability(probabilities, frequencies; deviation=true, kwargs...)
+reliability(probabilities, frequencies, low_high; deviation=true, kwargs...)
+reliability(probabilities, frequencies, low, high; deviation=true, kwargs...)</code></pre><p>Plot a reliability diagram of the observed <code>frequencies</code> versus the predicted <code>probabilities</code>, optionally with consistency bars ranging from <code>low</code> to <code>high</code> for each probability.</p><p>If <code>deviation</code> is <code>true</code> (default), the difference <code>frequencies - probabilities</code> is plotted versus <code>probabilities</code>. This can be helpful for inspecting how closely the observed frequencies match the predicted probabilities.</p><p><strong>Attributes</strong></p><p>Available attributes and their defaults for <code>MakieCore.Combined{ReliabilityDiagrams.reliability, T} where T</code> are: </p><pre><code class="nohighlight">  barscolor         :black
+  barscolormap      :viridis
+  barscolorrange    MakieCore.Automatic()
+  barslinewidth     1.5
+  barsvisible       true
+  barswhiskerwidth  0
+  color             :black
+  colormap          :viridis
+  colorrange        MakieCore.Automatic()
+  cycle             [:color]
+  deviation         true
+  inspectable       true
+  linestyle         &quot;nothing&quot;
+  linewidth         1.5
+  marker            GeometryBasics.Circle{T} where T
+  markercolor       :black
+  markercolormap    :viridis
+  markercolorrange  MakieCore.Automatic()
+  markersize        9
+  markervisible     true
+  strokecolor       :black
+  strokewidth       0
+  visible           true</code></pre><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; probabilities = sort(rand(10));
+
+julia&gt; frequencies = rand(10);
+
+julia&gt; reliability(probabilities, frequencies);
+
+julia&gt; # plot frequencies instead of deviations
+       reliability(probabilities, frequencies; deviation=false);
+
+julia&gt; # use different colors for markers
+       reliability(probabilities, frequencies; markercolor=:red);
+
+julia&gt; # random consistency bars
+       low = max.(0, probabilities .- rand.());
+
+julia&gt; high = min.(1, probabilities .+ rand.());
+
+julia&gt; # plot pre-computed consistency bars
+       reliability(probabilities, frequencies, low, high);
+
+julia&gt; # alternatively consistency bars can be specified as vector of tuples
+       reliability(probabilities, frequencies, map(tuple, low, high));</code></pre><p><strong>References</strong></p><p>Bröcker, J. and Smith, L.A. (2007). <em>Increasing the reliability of reliability diagrams</em>. Weather and forecasting, 22(3), pp. 651-661.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/recipes/makie.jl#L1-L49">source</a></section><section><div><pre><code class="nohighlight">reliability(
+    probabilities::AbstractVector{&lt;:Real},
+    outcomes::AbstractVector{Bool};
+    binning=EqualMass(),
+    consistencybars=ConsistencyBars(),
+    kwargs...,
+)</code></pre><p>Plot a reliability diagram of the observed frequencies versus the mean probabilities in different clusters together with a set of consistency bars.</p><p>Optionally, the binning algorithm that is used to form the clusters and the consistency bars can be configured with the <code>binning</code> and <code>consistencybars</code> keyword arguments. If <code>consistencybars === nothing</code>, then no consistency bars are computed.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; probabilities = rand(10);
+
+julia&gt; outcomes = rand(Bool, 10);
+
+julia&gt; # default binning and consistency bars
+       reliability(probabilities, outcomes);
+
+julia&gt; # custom options: without consistency bars
+       reliability(probabilities, outcomes; consistencybars=nothing);</code></pre><p>See also: <a href="#ReliabilityDiagrams.EqualMass"><code>EqualMass</code></a>, <a href="#ReliabilityDiagrams.EqualSize"><code>EqualSize</code></a>, <a href="#ReliabilityDiagrams.ConsistencyBars"><code>ConsistencyBars</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/recipes/makie.jl#L78-L109">source</a></section></article><h4 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h4><pre><code class="language-julia">using ReliabilityDiagrams
+using CairoMakie
+
+probabilities = rand(100)
+outcomes = rand(100) .&lt; probabilities
+reliability(probabilities, outcomes)</code></pre><p><img src="../reliability_example.svg" alt="reliability example"/></p><pre><code class="language-julia">lines([0, 1], [0, 1]; color=:black)
+reliability!(probabilities, outcomes; deviation=false)</code></pre><p><img src="../reliability_example_nodeviation.svg" alt="reliability example nodeviation"/></p><pre><code class="language-julia">reliability(probabilities, outcomes; consistencybars=nothing)</code></pre><p><img src="../reliability_example_noconsistencybars.svg" alt="reliability example noconsistencybars"/></p><pre><code class="language-julia">reliability(probabilities, outcomes; binning=EqualSize())</code></pre><p><img src="../reliability_example_equalsize.svg" alt="reliability example equalsize"/></p><h3 id="Plots"><a class="docs-heading-anchor" href="#Plots">Plots</a><a id="Plots-1"></a><a class="docs-heading-anchor-permalink" href="#Plots" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-binding" id="ReliabilityDiagrams.reliabilityplot" href="#ReliabilityDiagrams.reliabilityplot"><code>ReliabilityDiagrams.reliabilityplot</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">reliabilityplot(probabilities, frequencies; deviation=true, kwargs...)
+reliabilityplot(probabilities, frequencies, low_high; deviation=true, kwargs...)
+reliabilityplot(probabilities, frequencies, low, high; deviation=true, kwargs...)</code></pre><p>Plot a reliability diagram of the observed <code>frequencies</code> versus the predicted <code>probabilities</code>, optionally with consistency bars ranging from <code>low</code> to <code>high</code> for each probability.</p><p>If <code>deviation</code> is <code>true</code> (default), the difference <code>frequencies - probabilities</code> is plotted versus <code>probabilities</code>. This can be helpful for inspecting how closely the observed frequencies match the predicted probabilities.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; probabilities = sort(rand(10));
+
+julia&gt; frequencies = rand(10);
+
+julia&gt; reliabilityplot(probabilities, frequencies);
+
+julia&gt; # plot frequencies instead of deviations
+       reliabilityplot(probabilities, frequencies; deviation=false);
+
+julia&gt; # use different colors for markers
+       reliabilityplot(probabilities, frequencies; markercolor=:red);
+
+julia&gt; # random consistency bars
+       low = max.(0, probabilities .- rand.());
+
+julia&gt; high = min.(1, probabilities .+ rand.());
+
+julia&gt; # plot pre-computed consistency bars
+       reliabilityplot(probabilities, frequencies, low, high);
+
+julia&gt; # alternatively consistency bars can be specified as vector of tuples
+       reliabilityplot(probabilities, frequencies, map(tuple, low, high));</code></pre><p><strong>References</strong></p><p>Bröcker, J. and Smith, L.A. (2007). <em>Increasing the reliability of reliability diagrams</em>. Weather and forecasting, 22(3), pp. 651-661.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/recipes/plots.jl#L1-L45">source</a></section><section><div><pre><code class="nohighlight">reliabilityplot(
+    probabilities::AbstractVector{&lt;:Real},
+    outcomes::AbstractVector{Bool};
+    binning=EqualMass(),
+    consistencybars=ConsistencyBars(),
+    kwargs...,
+)</code></pre><p>Plot a reliability diagram of the observed frequencies versus the mean probabilities in different clusters together with a set of consistency bars.</p><p>Optionally, the binning algorithm that is used to form the clusters and the consistency bars can be configured with the <code>binning</code> and <code>consistencybars</code> keyword arguments. If <code>consistencybars === nothing</code>, then no consistency bars are computed.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; probabilities = rand(10);
+
+julia&gt; outcomes = rand(Bool, 10);
+
+julia&gt; # default binning and consistency bars
+       reliabilityplot(probabilities, outcomes);
+
+julia&gt; # custom options: without consistency bars
+       reliabilityplot(probabilities, outcomes; consistencybars=nothing);</code></pre><p>See also: <a href="#ReliabilityDiagrams.EqualMass"><code>EqualMass</code></a>, <a href="#ReliabilityDiagrams.EqualSize"><code>EqualSize</code></a>, <a href="#ReliabilityDiagrams.ConsistencyBars"><code>ConsistencyBars</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/recipes/plots.jl#L52-L83">source</a></section></article><h4 id="Example-2"><a class="docs-heading-anchor" href="#Example-2">Example</a><a class="docs-heading-anchor-permalink" href="#Example-2" title="Permalink"></a></h4><pre><code class="language-julia">using ReliabilityDiagrams
+using Plots
+
+probabilities = rand(100)
+outcomes = rand(100) .&lt; probabilities
+reliabilityplot(probabilities, outcomes)</code></pre><p><img src="../reliabilityplot_example.svg" alt="reliabilityplot example"/></p><pre><code class="language-julia">plot([0, 1], [0, 1])
+reliabilityplot!(probabilities, outcomes; deviation=false)</code></pre><p><img src="../reliabilityplot_example_nodeviation.svg" alt="reliabilityplot example nodeviation"/></p><pre><code class="language-julia">reliabilityplot(probabilities, outcomes; consistencybars=nothing)</code></pre><p><img src="../reliabilityplot_example_noconsistencybars.svg" alt="reliabilityplot example noconsistencybars"/></p><pre><code class="language-julia">reliabilityplot(probabilities, outcomes; binning=EqualSize())</code></pre><p><img src="../reliabilityplot_example_equalsize.svg" alt="reliabilityplot example equalsize"/></p><h2 id="Binning-algorithms"><a class="docs-heading-anchor" href="#Binning-algorithms">Binning algorithms</a><a id="Binning-algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Binning-algorithms" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="ReliabilityDiagrams.EqualMass" href="#ReliabilityDiagrams.EqualMass"><code>ReliabilityDiagrams.EqualMass</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">EqualMass(; n::Int=10)</code></pre><p>Create binning algorithm with <code>n</code> bins of (approximately) equal mass.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/binning.jl#L22-L26">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="ReliabilityDiagrams.EqualSize" href="#ReliabilityDiagrams.EqualSize"><code>ReliabilityDiagrams.EqualSize</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">EqualSize(; n::Int=10)</code></pre><p>Create binning algorithm with <code>n</code> bins of the same size.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/binning.jl#L7-L11">source</a></section></article><h2 id="Consistency-bars"><a class="docs-heading-anchor" href="#Consistency-bars">Consistency bars</a><a id="Consistency-bars-1"></a><a class="docs-heading-anchor-permalink" href="#Consistency-bars" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="ReliabilityDiagrams.ConsistencyBars" href="#ReliabilityDiagrams.ConsistencyBars"><code>ReliabilityDiagrams.ConsistencyBars</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">ConsistencyBars(; samples::Int=1_000, coverage::Real=0.95)</code></pre><p>Create consistency bars that cover a proportion of <code>coverage</code> samples obtained by consistency resampling with <code>samples</code> resampling steps.</p><p><strong>References</strong></p><p>Bröcker, J. and Smith, L.A. (2007). <em>Increasing the reliability of reliability diagrams</em>. Weather and forecasting, 22(3), pp. 651-661.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/devmotion/ReliabilityDiagrams.jl/blob/43f2ec16c3b60a254715e9cdc1f14e4d50c6faa7/src/consistency_bars.jl#L5-L15">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 17 November 2021 23:22">Wednesday 17 November 2021</span>. Using Julia version 1.6.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
