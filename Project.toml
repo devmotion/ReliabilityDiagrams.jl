@@ -22,20 +22,21 @@ ReliabilityDiagramsMakieExt = "Makie"
 ReliabilityDiagramsRecipesBaseExt = "RecipesBase"
 
 [compat]
+Aqua = "0.8"
 ConsistencyResampling = "0.3"
 DataStructures = "0.18"
 Makie = "0.15.2, 0.16, 0.17, 0.18, 0.19, 0.20"
+Random = "<0.0.1, 1"
 RecipesBase = "1"
 Statistics = "<0.0.1, 1"
 StatsBase = "0.33, 0.34"
 StructArrays = "0.5, 0.6"
+Test = "<0.0.1, 1"
 julia = "1.6"
 
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
-Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
-RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Aqua", "Makie", "RecipesBase", "Test"]
+test = ["Aqua", "Test"]
