@@ -50,6 +50,7 @@ save("reliability_example_equalsize.svg", current_figure()); nothing # hide
 
 ```@docs
 reliabilityplot
+reliabilityplot!
 ```
 
 #### Example
